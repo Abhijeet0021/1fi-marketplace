@@ -4,9 +4,11 @@ import Navbar from './components/Navbar.jsx';
 import ShopPage from './pages/ShopPage.jsx';
 import ProductDetailPage from './pages/ProductDetailPage.jsx';
 
+import MobileBottomNav from './components/MobileBottomNav.jsx';
+
 export default function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8F9FD] text-slate-900 selection:bg-[#5E2BE9]/20 selection:text-[#5E2BE9]">
+    <div className="min-h-screen flex flex-col bg-[#F8F9FD] text-slate-900 selection:bg-[#5E2BE9]/20 selection:text-[#5E2BE9] pb-16 sm:pb-0">
       <Navbar />
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <Routes>
@@ -16,6 +18,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+      <MobileBottomNav />
       <footer className="mt-auto border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
