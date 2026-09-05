@@ -99,6 +99,20 @@ export default function ProductDetailPage() {
   const currentMrp = selectedVariant ? selectedVariant.mrp : product.baseMrp;
   const savings = Math.max(0, currentMrp - currentPrice);
 
+  // Dynamically recalculate EMI plans proportional to the selected variant price vs base price
+  const priceRatio = product.basePrice > 0 ? currentPrice / product.basePrice : 1;
+
+  const dynamicEmiPlans = (product.emiPlans || []).map((plan) => ({
+    ...plan,
+    monthlyAmount: Math.round(plan.monthlyAmount * priceRatio),
+  }));
+
+  // Synchronize active selected plan with recalculated monthly amount
+  const activeSelectedPlan =
+    dynamicEmiPlans.find((p) => p.tenureMonths === selectedPlan?.tenureMonths) ||
+    dynamicEmiPlans[0] ||
+    selectedPlan;
+
   const storages = Array.from(
     new Set((product.variants || []).map((v) => v.storage))
   );
@@ -283,14 +297,14 @@ export default function ProductDetailPage() {
                 </span>
               </div>
 
-              {/* List of Available EMI Plans (Selectable) */}
+              {/* List of Available EMI Plans (Selectable & Dynamic based on selected storage) */}
               <div className="space-y-2.5 max-h-[460px] overflow-y-auto pr-1">
-                {product.emiPlans && product.emiPlans.length > 0 ? (
-                  product.emiPlans.map((plan) => (
+                {dynamicEmiPlans && dynamicEmiPlans.length > 0 ? (
+                  dynamicEmiPlans.map((plan) => (
                     <EmiPlanCard
-                      key={plan._id || plan.tenureMonths}
+                      key={plan.id || plan._id || plan.tenureMonths}
                       plan={plan}
-                      isSelected={selectedPlan?.tenureMonths === plan.tenureMonths}
+                      isSelected={activeSelectedPlan?.tenureMonths === plan.tenureMonths}
                       onSelect={(p) => setSelectedPlan(p)}
                     />
                   ))
@@ -308,11 +322,11 @@ export default function ProductDetailPage() {
                 <p className="text-[11px] uppercase font-bold text-slate-400 tracking-wider">
                   Selected Plan
                 </p>
-                {selectedPlan ? (
+                {activeSelectedPlan ? (
                   <p className="text-sm font-extrabold text-slate-900">
-                    ₹{selectedPlan.monthlyAmount.toLocaleString('en-IN')}/mo{' '}
+                    ₹{activeSelectedPlan.monthlyAmount.toLocaleString('en-IN')}/mo{' '}
                     <span className="text-slate-500 font-medium">
-                      ({selectedPlan.tenureMonths} Months • {selectedPlan.interestRate === 0 ? '0% Interest' : `${selectedPlan.interestRate}%`})
+                      ({activeSelectedPlan.tenureMonths} Months • {activeSelectedPlan.interestRate === 0 ? '0% Interest' : `${activeSelectedPlan.interestRate}%`})
                     </span>
                   </p>
                 ) : (
@@ -322,7 +336,7 @@ export default function ProductDetailPage() {
 
               <button
                 onClick={() => setIsModalOpen(true)}
-                disabled={!selectedPlan}
+                disabled={!activeSelectedPlan}
                 className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#5E2BE9] to-[#4318c4] hover:opacity-95 text-white text-sm font-bold shadow-lg shadow-[#5E2BE9]/25 transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:pointer-events-none"
               >
                 <span>Proceed with Selected Plan</span>
@@ -339,7 +353,7 @@ export default function ProductDetailPage() {
         onClose={() => setIsModalOpen(false)}
         product={product}
         selectedVariant={selectedVariant}
-        selectedPlan={selectedPlan}
+        selectedPlan={activeSelectedPlan}
       />
     </div>
   );
