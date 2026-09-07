@@ -107,7 +107,7 @@ export default function ShopPage() {
             Top Brands Catalog
           </h2>
           <p className="text-xs text-slate-500 max-w-md mt-1.5 leading-relaxed">
-            Per assignment requirements, this section remains blank/unimplemented. Explore the{' '}
+            As Per assignment requirements, this section remains blank/unimplemented. Explore the{' '}
             <button
               onClick={() => setActiveTab('1fi-marketplace')}
               className="text-[#5E2BE9] font-bold underline hover:text-[#4F26E9]"
@@ -132,7 +132,7 @@ export default function ShopPage() {
             Nearby Retail Partners
           </h2>
           <p className="text-xs text-slate-500 max-w-md mt-1.5 leading-relaxed">
-            Per assignment requirements, this section remains blank/unimplemented. Navigate to{' '}
+            As Per assignment requirements, this section remains blank/unimplemented. Navigate to{' '}
             <button
               onClick={() => setActiveTab('1fi-marketplace')}
               className="text-[#5E2BE9] font-bold underline hover:text-[#4F26E9]"
